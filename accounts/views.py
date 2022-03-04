@@ -39,8 +39,8 @@ def register(request):
             to_email = email
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
-            messages.success(request, 'Thank you registering with us. Please check Your E-mail, sent a verifition mail, Please verify it.')
-            return redirect('register')
+            # messages.success(request, 'Thank you registering with us. Please check Your E-mail, sent a verifition mail, Please verify it.')
+            return redirect('/accounts/login/?command=verificaton&email='+email)
     else:
         form = RegistrationForm()
     context = {'form': form}
@@ -56,7 +56,7 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             # messages.success(request, 'You are now logged In')
-            return redirect('home')
+            return redirect('dashboard')
         else:
             messages.error(request, 'Invalid login credentials')
             return redirect('login')
@@ -85,3 +85,8 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, 'Invalid activation link')
         return redirect('register') 
+
+
+@login_required(login_url = 'login')
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
